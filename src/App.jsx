@@ -89,12 +89,10 @@ export default function App() {
   };
 
   return (
-    // 🔥 THEME ใหม่: soft cream + glass + modern POS (layout เดิม แต่สวยขึ้นมาก)
-
-    <div className="h-screen flex bg-gradient-to-br from-[#fdfcf9] to-[#f3f4f6] font-sarabun text-gray-800">
+    <div className="min-h-screen flex flex-col lg:flex-row bg-[#f9fafb] text-gray-800 font-sarabun">
       {/* LEFT */}
-      <div className="w-2/3 p-6 overflow-auto">
-        <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl border border-gray-200 p-4">
+      <div className="w-full lg:w-2/3 p-6">
+        <div className="bg-white rounded-3xl shadow-xl border border-gray-200 p-4">
           <table className="w-full text-center">
             {/* HEADER */}
             <thead>
@@ -103,17 +101,13 @@ export default function App() {
 
                 {subMenus.map((s, i) => (
                   <th key={i} className="p-3">
-                    <img
-                      src={s.image}
-                      className="w-12 h-16 mx-auto drop-shadow-sm"
-                    />
+                    <img src={s.image} className="w-12 h-16 mx-auto" />
 
-                    {/* TOTAL PER COL */}
-                    <div className="mt-2 flex flex-col items-center">
-                      <span className="text-2xl font-extrabold text-indigo-600 leading-none">
+                    <div className="mt-2">
+                      <div className="text-2xl font-extrabold text-orange-500">
                         {getColTotal(s.key)}
-                      </span>
-                      <span className="text-[10px] text-gray-400">แก้ว</span>
+                      </div>
+                      <div className="text-[10px] text-gray-400">แก้ว</div>
                     </div>
                   </th>
                 ))}
@@ -123,18 +117,13 @@ export default function App() {
             {/* BODY */}
             <tbody>
               {menuData.map((menu, i) => (
-                <tr key={i} className="border-t border-gray-100">
-                  {/* MENU */}
+                <tr key={i} className="border-t">
                   <td className="p-3">
-                    <div className="flex flex-col items-center gap-1">
-                      <img
-                        src={menu.image}
-                        className="w-12 h-12 rounded-xl shadow-sm"
-                      />
-                      <span className="text-sm font-medium text-gray-700">
-                        {menu.name}
-                      </span>
-                    </div>
+                    <img
+                      src={menu.image}
+                      className="w-12 h-12 mx-auto rounded-xl"
+                    />
+                    <p className="text-sm">{menu.name}</p>
                   </td>
 
                   {subMenus.map((sub, j) => {
@@ -147,11 +136,11 @@ export default function App() {
                         <div
                           onClick={() => add(menu.name, sub.key, price)}
                           className={`
-                        rounded-2xl p-3 cursor-pointer transition-all duration-150
+                        rounded-2xl p-3 transition cursor-pointer border
                         ${
                           qty > 0
-                            ? "bg-indigo-500 text-white shadow-md scale-[1.02]"
-                            : "bg-gray-50 hover:bg-indigo-50"
+                            ? "bg-orange-500 text-white shadow-md scale-[1.02]"
+                            : "bg-gray-50 hover:bg-orange-50 border-gray-200"
                         }
                       `}
                         >
@@ -161,23 +150,21 @@ export default function App() {
                                 e.stopPropagation();
                                 remove(key);
                               }}
-                              className="bg-white/20 w-8 h-8 rounded-xl flex items-center justify-center backdrop-blur"
+                              className="bg-white/70 w-8 h-8 rounded-xl flex items-center justify-center shadow"
                             >
-                              <FiMinus size={14} />
+                              <FiMinus />
                             </button>
 
-                            <span className="font-bold text-lg w-6 text-center">
-                              {qty}
-                            </span>
+                            <span className="font-bold text-lg">{qty}</span>
 
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
                                 add(menu.name, sub.key, price);
                               }}
-                              className="bg-white/20 w-8 h-8 rounded-xl flex items-center justify-center backdrop-blur"
+                              className="bg-white/70 w-8 h-8 rounded-xl flex items-center justify-center shadow"
                             >
-                              <FiPlus size={14} />
+                              <FiPlus />
                             </button>
                           </div>
                         </div>
@@ -192,25 +179,26 @@ export default function App() {
       </div>
 
       {/* RIGHT */}
-      <div className="w-1/3 flex flex-col p-6 gap-4">
+      <div className="w-full lg:w-1/3 p-6 flex flex-col gap-4">
         {/* MONEY */}
-        <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-lg border p-4">
+        <div className="bg-white rounded-3xl shadow-xl border p-5">
           <div className="grid grid-cols-3 text-center items-center">
             <div>
               <p className="text-xs text-gray-400">รับเงิน</p>
-              <p className="text-2xl font-bold text-gray-700">
-                {format(cash || 0)}
-              </p>
+              <p className="text-2xl font-bold">{format(cash || 0)}</p>
             </div>
 
-            <div className="bg-indigo-500 text-white rounded-2xl py-4 shadow-md">
+            {/* 🔥 TOTAL (เด่นสุด) */}
+            <div className="bg-orange-500 text-white rounded-2xl py-4 shadow-lg">
               <p className="text-xs opacity-80">รวม</p>
-              <p className="text-3xl font-extrabold">{format(total)}</p>
+              <p className="text-3xl font-extrabold tracking-wider">
+                {format(total)}
+              </p>
             </div>
 
             <div>
               <p className="text-xs text-gray-400">เงินทอน</p>
-              <p className="text-2xl font-bold text-emerald-500">
+              <p className="text-2xl font-bold text-green-500">
                 {format(change)}
               </p>
             </div>
@@ -224,7 +212,9 @@ export default function App() {
               <button
                 key={n}
                 onClick={() => press(n)}
-                className="bg-white/80 backdrop-blur rounded-2xl py-5 text-lg font-semibold shadow hover:shadow-lg active:scale-95 transition"
+                className="bg-white border border-gray-200
+                     rounded-2xl py-5 text-lg font-bold
+                     shadow hover:bg-gray-50 active:scale-95"
               >
                 {n}
               </button>
@@ -235,9 +225,7 @@ export default function App() {
         {/* CLEAR */}
         <button
           onClick={clearAll}
-          className="w-full bg-gradient-to-r from-red-500 to-red-400 text-white
-                 py-5 rounded-2xl text-lg font-bold shadow-lg
-                 hover:scale-[1.02] active:scale-95 transition"
+          className="bg-red-500 text-white py-5 rounded-2xl font-bold shadow-lg active:scale-95"
         >
           ล้างทั้งหมด
         </button>
