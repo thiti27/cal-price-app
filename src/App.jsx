@@ -81,7 +81,6 @@ export default function App() {
     setCash("");
   };
 
-  // 🔥 รวมจำนวนในแต่ละ column
   const getColTotal = (type) => {
     return Object.entries(cart)
       .filter(([k]) => k.includes(`-${type}`))
@@ -89,132 +88,168 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row bg-[#f9fafb] text-gray-800 font-sarabun">
+    <div className="min-h-screen flex flex-col lg:flex-row bg-[#f9fafb] font-sarabun text-gray-800">
       {/* LEFT */}
-      <div className="w-full lg:w-2/3 p-6">
-        <div className="bg-white rounded-3xl shadow-xl border border-gray-200 p-4">
-          <table className="w-full text-center">
-            {/* HEADER */}
-            <thead>
-              <tr className="text-gray-400 text-sm">
-                <th className="p-3">เมนู</th>
-
-                {subMenus.map((s, i) => (
-                  <th key={i} className="p-3">
-                    <img src={s.image} className="w-12 h-16 mx-auto" />
-
-                    <div className="mt-2">
-                      <div className="text-2xl font-extrabold text-orange-500">
-                        {getColTotal(s.key)}
-                      </div>
-                      <div className="text-[10px] text-gray-400">แก้ว</div>
-                    </div>
-                  </th>
-                ))}
-              </tr>
-            </thead>
-
-            {/* BODY */}
-            <tbody>
-              {menuData.map((menu, i) => (
-                <tr key={i} className="border-t">
-                  <td className="p-3">
-                    <img
-                      src={menu.image}
-                      className="w-12 h-12 mx-auto rounded-xl"
-                    />
-                    <p className="text-sm">{menu.name}</p>
-                  </td>
-
-                  {subMenus.map((sub, j) => {
-                    const key = `${menu.name}-${sub.key}`;
-                    const qty = cart[key]?.qty || 0;
-                    const price = menu.prices[sub.key];
-
-                    return (
-                      <td key={j} className="p-2">
-                        <div
-                          onClick={() => add(menu.name, sub.key, price)}
-                          className={`
-                        rounded-2xl p-3 transition cursor-pointer border
-                        ${
-                          qty > 0
-                            ? "bg-orange-500 text-white shadow-md scale-[1.02]"
-                            : "bg-gray-50 hover:bg-orange-50 border-gray-200"
-                        }
-                      `}
-                        >
-                          <div className="flex justify-center items-center gap-3">
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                remove(key);
-                              }}
-                              className="bg-white/70 w-8 h-8 rounded-xl flex items-center justify-center shadow"
-                            >
-                              <FiMinus />
-                            </button>
-
-                            <span className="font-bold text-lg">{qty}</span>
-
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                add(menu.name, sub.key, price);
-                              }}
-                              className="bg-white/70 w-8 h-8 rounded-xl flex items-center justify-center shadow"
-                            >
-                              <FiPlus />
-                            </button>
-                          </div>
-                        </div>
-                      </td>
-                    );
-                  })}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* RIGHT */}
-      <div className="w-full lg:w-1/3 p-6 flex flex-col gap-4">
-        {/* MONEY */}
-        <div className="bg-white rounded-3xl shadow-xl border p-5">
-          <div className="grid grid-cols-3 text-center items-center">
-            <div>
-              <p className="text-xs text-gray-400">รับเงิน</p>
-              <p className="text-2xl font-bold">{format(cash || 0)}</p>
+      <div className="w-full lg:w-2/3 p-4 sm:p-6">
+        <div className="bg-white rounded-3xl shadow-md p-6">
+          {/* HEADER */}
+          <div className="grid grid-cols-4 gap-6 mb-6">
+            <div className="flex items-center justify-center">
+              <img
+                src="/logo.png"
+                className="w-60 h-40 object-contain -ml-10"
+              />
             </div>
 
-            {/* 🔥 TOTAL (เด่นสุด) */}
-            <div className="bg-orange-500 text-white rounded-2xl py-4 shadow-lg">
-              <p className="text-xs opacity-80">รวม</p>
-              <p className="text-3xl font-extrabold tracking-wider">
-                {format(total)}
+            {subMenus.map((s) => (
+              <div key={s.key} className="text-center">
+                <img
+                  src={s.image}
+                  className="w-14 h-16 mx-auto object-contain"
+                />
+
+                <p className="text-xs text-gray-400 mt-1">
+                  {menuData[0].prices[s.key]} ฿
+                </p>
+
+                <div className="mt-1 px-3 py-1 rounded-full bg-orange-50 border border-orange-200">
+                  <p className="text-xl font-bold text-orange-600">
+                    {getColTotal(s.key)}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* LIST */}
+          <div className="flex flex-col gap-3 -mt-5">
+            {menuData.map((menu, idx) => (
+              <div
+                key={menu.name}
+                className={`
+      grid grid-cols-4 gap-3 items-center rounded-2xl px-2 py-2
+      transition-all
+      ${idx % 2 === 0 ? "bg-gray-50" : "bg-white"}
+      border border-transparent hover:border-gray-200
+    `}
+              >
+                {/* MENU */}
+                <div className="flex items-center gap-3">
+                  <img
+                    src={menu.image}
+                    className="w-12 h-12 rounded-xl object-cover"
+                  />
+                  <span className="text-sm font-semibold text-gray-800">
+                    {menu.name}
+                  </span>
+                </div>
+
+                {/* BUTTONS */}
+                {subMenus.map((sub) => {
+                  const key = `${menu.name}-${sub.key}`;
+                  const qty = cart[key]?.qty || 0;
+
+                  return (
+                    <div
+                      key={key}
+                      onClick={() =>
+                        add(menu.name, sub.key, menu.prices[sub.key])
+                      }
+                      className={`
+            h-[64px] rounded-2xl flex items-center justify-between px-3
+            cursor-pointer transition-all border
+            ${
+              qty > 0
+                ? "bg-orange-50 border-orange-200 shadow-sm"
+                : "bg-white border-gray-200 hover:bg-gray-100"
+            }
+            active:scale-[0.97]
+          `}
+                    >
+                      {/* - */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          remove(key);
+                        }}
+                        className="w-8 h-8 rounded-lg bg-white shadow flex items-center justify-center"
+                      >
+                        <FiMinus size={14} />
+                      </button>
+
+                      {/* qty */}
+                      <span className="text-lg font-bold text-gray-900">
+                        {qty}
+                      </span>
+
+                      {/* + */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          add(menu.name, sub.key, menu.prices[sub.key]);
+                        }}
+                        className="w-8 h-8 rounded-lg bg-white shadow flex items-center justify-center"
+                      >
+                        <FiPlus size={14} />
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      {/* RIGHT */}
+
+      <div className="w-full lg:w-1/3 p-4 sm:p-6 flex flex-col gap-4">
+        {/* 🔥 MONEY (จัดใหม่ทั้งหมด) */}
+        <div className="bg-white rounded-3xl shadow-md border p-5">
+          {/* 🔥 TOTAL (soft highlight ไม่แข็ง) */}
+          <div
+            className="bg-orange-50 border border-orange-200 
+                  rounded-2xl py-6 text-center mb-4"
+          >
+            <p className="text-xs text-orange-400 tracking-wide">ยอดรวม</p>
+
+            <p className="text-5xl font-extrabold text-orange-600 tracking-wide">
+              {format(total)}
+            </p>
+          </div>
+
+          {/* 🔥 CASH + CHANGE */}
+          <div className="flex gap-3">
+            {/* CASH */}
+            <div className="flex-1 bg-gray-50 rounded-2xl py-4 text-center">
+              <p className="text-xs text-gray-400">รับเงิน</p>
+
+              <p className="text-2xl font-semibold text-gray-800">
+                {format(cash || 0)}
               </p>
             </div>
 
-            <div>
-              <p className="text-xs text-gray-400">เงินทอน</p>
-              <p className="text-2xl font-bold text-green-500">
+            {/* CHANGE */}
+            <div className="flex-1 bg-green-50 rounded-2xl py-4 text-center">
+              <p className="text-xs text-green-400">เงินทอน</p>
+
+              <p className="text-2xl font-semibold text-green-600">
                 {format(change)}
               </p>
             </div>
           </div>
         </div>
 
-        {/* KEYPAD */}
+        {/* 🔥 KEYPAD */}
         <div className="grid grid-cols-3 gap-3">
           {["7", "8", "9", "4", "5", "6", "1", "2", "3", "0", "←", "C"].map(
             (n) => (
               <button
                 key={n}
                 onClick={() => press(n)}
-                className="bg-white border border-gray-200
-                     rounded-2xl py-5 text-lg font-bold
-                     shadow hover:bg-gray-50 active:scale-95"
+                className="bg-white border border-gray-200 
+                   rounded-2xl py-5 text-lg font-semibold
+                   shadow-sm hover:bg-gray-50
+                   active:scale-95 transition"
               >
                 {n}
               </button>
@@ -222,12 +257,17 @@ export default function App() {
           )}
         </div>
 
-        {/* CLEAR */}
+        {/* 🔥 CLEAR */}
         <button
           onClick={clearAll}
-          className="bg-red-500 text-white py-5 rounded-2xl font-bold shadow-lg active:scale-95"
+          className="w-full bg-red-100 text-red-600 
+               py-5 rounded-2xl text-lg font-semibold
+               hover:bg-red-200 active:scale-95 transition"
         >
-          ล้างทั้งหมด
+          <div className="flex items-center justify-center gap-2">
+            <FiTrash2 size={18} />
+            ล้างรายการ
+          </div>
         </button>
       </div>
     </div>
