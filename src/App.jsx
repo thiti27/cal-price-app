@@ -11,27 +11,27 @@ const menuData = [
   {
     name: "ชาใต้",
     image: "/1-1.png",
-    prices: { bottle: 25, ice: 30, pour: 20 },
+    prices: { bottle: 20, ice: 25, pour: 25 },
   },
   {
     name: "ชาเขียว",
     image: "/1-2.png",
-    prices: { bottle: 25, ice: 30, pour: 20 },
+    prices: { bottle: 20, ice: 25, pour: 25 },
   },
   {
     name: "ช็อกโก้",
     image: "/1-3.png",
-    prices: { bottle: 30, ice: 35, pour: 25 },
+    prices: { bottle: 20, ice: 25, pour: 25 },
   },
   {
     name: "โอเลี้ยง",
     image: "/1-4.png",
-    prices: { bottle: 20, ice: 25, pour: 15 },
+    prices: { bottle: 20, ice: 25, pour: 25 },
   },
   {
     name: "เก็กฮวย",
     image: "/1-5.png",
-    prices: { bottle: 20, ice: 25, pour: 15 },
+    prices: { bottle: 20, ice: 25, pour: 25 },
   },
 ];
 
